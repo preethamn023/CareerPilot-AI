@@ -1,2 +1,56 @@
-skills/
+# CareerPilot AI - .gitignore
+
+# dependencies
 node_modules/
+.pnp.*
+.yarn/*
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+
+# environment & secrets - NEVER commit real keys
+.env
+.env.local
+.env*.local
+backend/.env
+
+# databases
+*.db
+*.sqlite
+*.sqlite3
+backend/career_pilot.db
+
+# build output
+frontend/dist/
+/.next/
+/out/
+/build/
+
+# logs & debug
+*.log
+dev.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# misc
+.DS_Store
+*.pem
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+coverage/
+local-*
+.claude
+.z-ai-config
+test
+prompt
+
+# upload artefacts
+/upload/*
+!/upload/.gitkeep

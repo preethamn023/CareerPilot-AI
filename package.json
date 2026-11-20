@@ -1,0 +1,13 @@
+{
+  "name": "careerpilot-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CareerPilot AI - AI-powered campus placement and resume optimization agent (FastAPI + React + Vite)",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "db:push": "node scripts/noop.js",
+    "build": "cd frontend && bun run build",
+    "typecheck": "cd frontend && bunx tsc --noEmit",
+    "test": "cd backend && .venv/bin/python -m pytest tests/ -q"
+  }
+}
