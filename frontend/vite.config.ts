@@ -15,6 +15,10 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 3000,
     strictPort: true,
+    // The sandbox preview proxy (e.g. *.fcapp.run) forwards its own Host
+    // header; Vite 6+ blocks unknown hosts by default. Allow any host since
+    // this dev server only runs inside the isolated sandbox.
+    allowedHosts: true,
     proxy: {
       "/api": {
         target: "http://127.0.0.1:8000",
@@ -26,6 +30,7 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 3000,
     strictPort: true,
+    allowedHosts: true,
     proxy: {
       "/api": {
         target: "http://127.0.0.1:8000",
