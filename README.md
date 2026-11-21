@@ -132,7 +132,7 @@ CareerPilot-AI/
 │   └── package.json
 ├── mini-services/ai-bridge/        # optional local AI bridge (bun + z-ai-web-dev-sdk)
 ├── scripts/dev.js                  # runs backend (8000) + frontend (3000) together
-├── .env (root, sandbox infra)      # not used by the app
+├── .env                            # Root environment configuration (API keys, settings)
 ├── .gitignore
 └── README.md
 ```
@@ -146,14 +146,31 @@ CareerPilot-AI/
 - Python 3.11+ and Node.js 18+ (or Bun)
 - A Gemini API key (optional - the app falls back to rule-based mode without one)
 
-### 1. Backend
+### Quick Start (Windows One-Click)
+
+Double-click `start.bat` in the project root, or run in Command Prompt:
+
+```cmd
+start.bat
+```
+
+This will automatically:
+1. Verify Python and Node.js environments.
+2. Install frontend dependencies (`npm install`) if not yet installed.
+3. Launch the FastAPI backend on `http://localhost:8000`.
+4. Launch the Vite frontend on `http://localhost:3000`.
+5. Open `http://localhost:3000` in your default browser.
+
+---
+
+### Manual Setup
 
 ```bash
 cd backend
 python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env               # then edit .env (see below)
+cp .env.example ../.env            # create root .env, then add your GEMINI_API_KEY
 uvicorn app.main:app --reload --port 8000
 ```
 
@@ -188,13 +205,13 @@ Serve `frontend/dist` from any static host and set `VITE_API_BASE_URL` to your d
 
 ## Configuration (Environment Variables)
 
-Create `backend/.env` from `backend/.env.example`:
+Create `.env` in the project root from `backend/.env.example`:
 
 | Variable | Default | Description |
 | --- | --- | --- |
 | `GEMINI_API_KEY` | *(empty)* | Google Gemini API key. **Primary AI provider.** |
 | `GEMINI_MODEL` | `gemini-2.5-flash` | Any currently supported Gemini model (e.g. `gemini-2.5-flash`, `gemini-2.5-pro`). |
-| `AI_BRIDGE_ENABLED` | `true` | Use the optional local AI bridge when no Gemini key is set. |
+| `AI_BRIDGE_ENABLED` | `false` | Use the optional local AI bridge when no Gemini key is set (defaults to `false` for Gemini-first operation). |
 | `AI_BRIDGE_URL` | `http://127.0.0.1:8010` | Bridge base URL. |
 | `ALLOWED_ORIGINS` | `http://localhost:3000,http://127.0.0.1:3000` | CORS allow-list (comma separated). |
 | `MAX_UPLOAD_SIZE_MB` | `5` | Resume upload size limit. |
@@ -316,7 +333,7 @@ overall = 40% x technical + 15% x education + 20% x experience + 25% x project r
 
 ## Security
 
-- Gemini API key only in `backend/.env`; never sent to the frontend; excluded from logs and error messages.
+- Gemini API key only in root `.env`; never sent to the frontend; excluded from logs and error messages.
 - PDF validation: extension, magic bytes, size cap, scanned-PDF detection.
 - SSRF protection: http/https only; localhost/`.local`/`.internal`/`.lan` blocked; IP-literal and DNS-resolved addresses checked against loopback/private/link-local (incl. cloud metadata `169.254.169.254`)/reserved/multicast ranges; ports 80/443 only; redirects re-validated per hop (max 5); content-type, size and timeout caps.
 - No CAPTCHA/paywall/authentication bypass - such pages return a clear error asking the user to paste the text.

@@ -1,7 +1,7 @@
 """API routes: Module F - mock interview generation and answer evaluation."""
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.agents.orchestrator import orchestrator
@@ -94,6 +94,7 @@ def list_questions(analysis_id: int | None = None, db: Session = Depends(get_db)
 @router.delete(
     "/{question_id}",
     status_code=status.HTTP_204_NO_CONTENT,
+    response_model=None,
     summary="Delete a stored question",
 )
 def delete_question(question_id: int, db: Session = Depends(get_db)) -> None:

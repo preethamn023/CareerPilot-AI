@@ -108,7 +108,14 @@ def validate_public_http_url(url: str) -> str:
         ipaddress.ip_address(hostname)
         candidates = [hostname]
     except ValueError:
-        candidates = _resolve_host(hostname)
+        try:
+            # Handle shorthand IPv4 notation like '127.1' (common SSRF bypass attempt)
+            if hostname and all(part.isdigit() for part in hostname.split(".")):
+                candidates = [socket.inet_ntoa(socket.inet_aton(hostname))]
+            else:
+                candidates = _resolve_host(hostname)
+        except (OSError, ValueError):
+            candidates = _resolve_host(hostname)
 
     for ip_text in candidates:
         if not _is_public_ip(ip_text):

@@ -78,7 +78,7 @@ class LLMService:
         provider, _ = self._active_provider()
         if provider == NONE_PROVIDER:
             raise LLMNotConfiguredError(
-                "No AI provider is configured. Set GEMINI_API_KEY in backend/.env "
+                "No AI provider is configured. Set GEMINI_API_KEY in the root .env "
                 "to enable AI-powered analysis. The application is currently "
                 "running in rule-based mode."
             )
@@ -144,7 +144,7 @@ class LLMService:
         if provider == BRIDGE_PROVIDER:
             return self._bridge_chat(messages, temp)
         raise LLMNotConfiguredError(
-            "No AI provider is configured. Set GEMINI_API_KEY in backend/.env "
+            "No AI provider is configured. Set GEMINI_API_KEY in the root .env "
             "to enable AI features."
         )
 
@@ -184,7 +184,7 @@ class LLMService:
         provider, _ = self._active_provider()
         if provider == NONE_PROVIDER:
             raise LLMNotConfiguredError(
-                "No AI provider is configured. Set GEMINI_API_KEY in backend/.env "
+                "No AI provider is configured. Set GEMINI_API_KEY in the root .env "
                 "to enable AI features."
             )
 
@@ -308,11 +308,19 @@ class LLMService:
             tools=[types.Tool(function_declarations=declarations)],
             max_output_tokens=settings.ai_max_output_tokens,
         )
+        gemini_contents = [
+            types.Content(
+                role="model" if msg.get("role") == "assistant" else "user",
+                parts=[types.Part.from_text(text=msg.get("content", ""))],
+            )
+            for msg in conversation
+            if msg.get("role") != "system"
+        ]
         client = self._get_gemini_client()
         try:
             response = client.models.generate_content(
                 model=settings.gemini_model,
-                contents=conversation,
+                contents=gemini_contents,
                 config=config,
             )
         except Exception as exc:  # noqa: BLE001
@@ -377,7 +385,7 @@ class LLMService:
             return LLMError("The Gemini request timed out. Please try again.")
         if "not found" in text or "404" in text:
             return LLMError(
-                "The configured GEMINI_MODEL is not available. Update the model name in backend/.env."
+                "The configured GEMINI_MODEL is not available. Update the model name in the root .env."
             )
         return LLMError("The Gemini request failed. Please try again.")
 

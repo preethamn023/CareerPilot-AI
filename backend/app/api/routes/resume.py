@@ -1,7 +1,7 @@
 """API routes: Module A - resume upload and management."""
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, HTTPException, Response, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.agents.orchestrator import orchestrator
@@ -67,7 +67,7 @@ def get_resume(resume_id: int, db: Session = Depends(get_db)) -> ResumeResponse:
     return _to_response(resume)
 
 
-@router.delete("/{resume_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a resume and its analyses")
+@router.delete("/{resume_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None, summary="Delete a resume and its analyses")
 def delete_resume(resume_id: int, db: Session = Depends(get_db)) -> None:
     try:
         repository.delete_resume(db, resume_id)

@@ -166,7 +166,7 @@ export default function Dashboard() {
                   ? health.ai_model
                     ? `Model: ${health.ai_model}`
                     : "Semantic analysis, optimization and interviews are fully AI-powered."
-                  : "Add GEMINI_API_KEY to backend/.env for AI-powered analysis. Deterministic analysis still works."}
+                  : "Add GEMINI_API_KEY to root .env for AI-powered analysis. Deterministic analysis still works."}
               </p>
             </div>
           </div>

@@ -2,16 +2,20 @@
 from __future__ import annotations
 
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Root .env file resolved from config.py: CareerPilot-AI/.env
+ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 
 
 class Settings(BaseSettings):
     """Central settings object. All values can be overridden via environment
-    variables or a `.env` file placed in the `backend/` directory."""
+    variables or a `.env` file placed in the project root."""
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=Path(__file__).resolve().parents[2] / ".env",
         env_file_encoding="utf-8",
         extra="ignore",
         case_sensitive=False,
@@ -25,19 +29,18 @@ class Settings(BaseSettings):
 
     # --------------------------------------------------------------- gemini
     # Primary AI provider (per project spec). Get a key at
-    # https://aistudio.google.com/apikey and put it in backend/.env
+    # https://aistudio.google.com/apikey and put it in the root .env
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-2.5-flash"
+    gemini_model: str = "gemini-3.1-flash-lite"
     gemini_temperature: float = 0.2
     ai_max_output_tokens: int = 8192
     ai_request_timeout_seconds: int = 120
 
     # ------------------------------------------------------ AI bridge (fallback)
     # Optional local OpenAI-style bridge (mini-services/ai-bridge) that wraps
-    # the sandbox LLM. Used ONLY when GEMINI_API_KEY is not configured so the
-    # application stays fully functional in demo environments.
+    # the sandbox LLM. Disabled by default for Gemini-first operation.
     ai_bridge_url: str = "http://127.0.0.1:8010"
-    ai_bridge_enabled: bool = True
+    ai_bridge_enabled: bool = False
     ai_bridge_timeout_seconds: int = 120
 
     # ----------------------------------------------------------------- cors

@@ -1,7 +1,7 @@
 """API routes: Module B - job description scraping and analysis."""
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.agents.orchestrator import orchestrator
@@ -98,7 +98,7 @@ def get_job(job_id: int, db: Session = Depends(get_db)) -> JobResponse:
     return _to_response(job)
 
 
-@router.delete("/jobs/{job_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a job and its analyses")
+@router.delete("/jobs/{job_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None, summary="Delete a job and its analyses")
 def delete_job(job_id: int, db: Session = Depends(get_db)) -> None:
     try:
         job = repository.get_job(db, job_id)
